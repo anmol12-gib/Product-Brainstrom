@@ -30,7 +30,7 @@ export default function App() {
         <Viewport />
       </div>
       <div className="w-screen h-screen">
-      {/* Aapka Board Logic */}
+      
     </div>
 
       {/* Foreground UI Layer */}
