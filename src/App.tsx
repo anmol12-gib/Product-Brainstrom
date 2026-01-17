@@ -13,10 +13,10 @@ export default function App() {
   const terminateCollaboration = useStore((s) => s.terminateCollaboration);
 
   useEffect(() => {
-    // App load hote hi sirf ek baar chalega
+    
     initCollaboration();
 
-    // Cleanup: Jab user browser tab band karega ya refresh karega
+    
     return () => {
       terminateCollaboration();
     };
