@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* You can still add your global canvas resets below */
+@layer base {
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+}
