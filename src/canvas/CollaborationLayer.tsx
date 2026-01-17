@@ -6,7 +6,7 @@ export default function CollaborationLayer() {
   const { others } = useStore();
 
   return (
-    // Z-index 900 taaki cursors sabse upar rahein
+    
     <div className="absolute inset-0 pointer-events-none z-[900] overflow-hidden">
       {others.map((user) => (
         <div
@@ -15,7 +15,7 @@ export default function CollaborationLayer() {
           style={{ 
             left: user.x, 
             top: user.y,
-            willChange: 'transform' // Performance ke liye
+            willChange: 'transform' 
           }}
         >
           {/* Cursor Icon */}
