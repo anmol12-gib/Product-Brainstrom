@@ -1,77 +1,163 @@
-# React + TypeScript + Vite
+# Product Brainstrom
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **high-performance, real-time collaborative whiteboard application** built with **React, TypeScript, and WebSockets**. This platform allows multiple users to brainstorm, design, and visualize ideas on a **synchronized canvas** simultaneously.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Live Deployment
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+* **Frontend (Vercel):** [https://product-brainstrom-588t-3cx83nepf-anmols-projects-0c0aea06.vercel.app/](https://product-brainstrom-588t-3cx83nepf-anmols-projects-0c0aea06.vercel.app/)
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## Key Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Real-time Collaboration
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+All board objects—including **shapes, paths, and notes**—are synchronized instantly across all active sessions using **Socket.io**.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Live Cursor Tracking
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+See the **real-time mouse positions** of all collaborators on the canvas.
+
+### Presence Management
+
+Automatic detection of users **joining or leaving** the workspace, ensuring an accurate collaborator list.
+
+### Drawing Engine
+
+Supports **freehand drawing** with real-time path updates for smooth sketching.
+
+### Shape Library
+
+Create and manipulate geometric primitives such as:
+
+* Rectangles
+* Circles
+* Triangles
+* Other basic shapes
+
+### Note System
+
+Collaborative **sticky notes and text elements** for brainstorming and documentation.
+
+### Object Transformation
+
+Select, drag, resize, and modify existing objects on the board.
+
+### Infinite Canvas Feel
+
+Smooth **panning and zooming** for navigating large, unrestricted board spaces.
+
+### State Management
+
+Robust **undo and redo** functionality powered by a history stack.
+
+---
+
+## Technical Stack
+
+### Frontend
+
+* **React.js** with **TypeScript** (type safety)
+* **Zustand** for centralized, local-first state management
+* **Tailwind CSS** for responsive and performant UI
+
+### Real-time Engine
+
+* **Socket.io** for bidirectional WebSocket communication
+
+### Build Tool
+
+* **Vite** for fast development and optimized production builds
+
+### Backend
+
+* **Node.js** server for broadcasting real-time events
+
+---
+
+## Project Structure
+
+```text
+src/
+├── canvas/
+│   ├── Interaction/     # User interactions (draw, select, transform)
+│   ├── Render/          # Canvas rendering logic
+│   └── Collaboration/   # Real-time sync and presence handling
+│
+├── store/
+│   ├── boardStore.ts    # Global board state (Zustand)
+│   ├── history.ts       # Undo/redo history stack
+│   └── socket.ts        # Socket.io event listeners
+│
+├── hooks/
+│   ├── useViewport.ts   # Zoom and pan logic
+│   └── useCoordinates.ts# Coordinate transformations
+│
+server.js                # Node.js Socket.io backend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Installation and Setup
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the Repository
 
-
+```bash
+git clone <repository-url>
+cd <project-folder>
 ```
+
+### 2. Install Dependencies
+
+#### Frontend
+
+```bash
+npm install
+```
+
+#### Backend
+
+```bash
+cd server
+npm install
+```
+
+### 3. Start the Socket.io Server
+
+```bash
+node server.js
+```
+
+### 4. Start the Frontend Development Server
+
+```bash
+npm run dev
+```
+
+### 5. Test Real-time Collaboration
+
+Open the application in **multiple browser tabs or devices** to verify real-time synchronization.
+
+---
+
+## Use Cases
+
+* Team brainstorming sessions
+* UI/UX wireframing
+* Technical architecture diagrams
+* Remote collaboration and teaching
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## Contributions
+
+Contributions, issues, and feature requests are welcome. Feel free to open a pull request or submit an issue.
