@@ -9,12 +9,12 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Aapka frontend URL
+        origin: "http://localhost:5173", 
         methods: ["GET", "POST"]
     }
 });
 
-let users = {}; // Connected users ka data store karne ke liye
+let users = {}; 
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
         color: `#${Math.floor(Math.random()*16777215).toString(16)}`
     };
 
-    // Sabhi clients ko updated users list bhejein
+    
     io.emit('users-update', Object.values(users));
 
     // 2. Cursor Movements
@@ -35,21 +35,21 @@ io.on('connection', (socket) => {
         if (users[socket.id]) {
             users[socket.id].x = data.x;
             users[socket.id].y = data.y;
-            // Baki sabko cursor position broadcast karein
+            
             socket.broadcast.emit('cursor-update', users[socket.id]);
         }
     });
 
-    // 3. OBJECT ADDITION (Missing listener jo ab add kiya hai)
+    // 3. OBJECT ADDITION
     socket.on('object-add', (newObj) => {
         console.log(`New ${newObj.type} added by ${socket.id}`);
-        // Relay to other clients
+        
         socket.broadcast.emit('remote-object-add', newObj);
     });
 
     // 4. OBJECT UPDATES (Dragging, Resizing, Text changes)
     socket.on('object-update', (data) => {
-        // data mein { id, updates } hona chahiye
+        // data mein { id, updates } 
         socket.broadcast.emit('remote-object-update', data);
     });
 
