@@ -1,7 +1,7 @@
 # Product Brainstrom
 
-A **high-performance, real-time collaborative whiteboard application** built with **React, TypeScript, and WebSockets**. This platform allows multiple users to brainstorm, design, and visualize ideas on a **synchronized canvas** simultaneously.
 
+A **high-performance, real-time collaborative whiteboard application** built with **React, TypeScript, and WebSockets**. This platform allows multiple users to brainstorm, design, and visualize ideas on a **synchronized canvas** simultaneously.
 
 ---
 
