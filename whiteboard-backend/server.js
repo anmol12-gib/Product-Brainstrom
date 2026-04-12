@@ -19,7 +19,7 @@ let users = {};
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // 1. Initial User Setup
+    
     users[socket.id] = {
         id: socket.id,
         x: 0,
@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
     
     io.emit('users-update', Object.values(users));
 
-    // 2. Cursor Movements
+
     socket.on('cursor-move', (data) => {
         if (users[socket.id]) {
             users[socket.id].x = data.x;
@@ -40,7 +40,11 @@ io.on('connection', (socket) => {
         }
     });
 
+<<<<<<< HEAD
     // 3. OBJECT ADDITION
+=======
+    // 3. OBJECT ADDITION 
+>>>>>>> e149a24 (add html2canvas)
     socket.on('object-add', (newObj) => {
         console.log(`New ${newObj.type} added by ${socket.id}`);
         
@@ -68,5 +72,10 @@ io.on('connection', (socket) => {
 
 const PORT = 4000;
 server.listen(PORT, () => {
+<<<<<<< HEAD
     console.log(`🚀 Collaborative Server running on port ${PORT}`);
 });
+=======
+    console.log(`Collaborative Server running on port ${PORT}`);
+});
+>>>>>>> e149a24 (add html2canvas)

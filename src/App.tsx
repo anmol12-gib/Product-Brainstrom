@@ -30,7 +30,11 @@ export default function App() {
         <Viewport />
       </div>
       <div className="w-screen h-screen">
+<<<<<<< HEAD
       
+=======
+    
+>>>>>>> e149a24 (add html2canvas)
     </div>
 
       {/* Foreground UI Layer */}
