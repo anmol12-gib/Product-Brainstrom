@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Added useState import
+import React, { useState } from 'react';
 import { useStore } from '../store/useStore.ts';
 
 export default function TopToolbar() {
@@ -11,30 +11,40 @@ export default function TopToolbar() {
   const [isShareOpen, setIsShareOpen] = useState(false);
 
   const handleShare = () => {
-  navigator.clipboard.writeText(window.location.href);
-  alert("Link copied! Share with others 🚀");
-};
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied! Share with others 🚀");
+  };
 
   const handleCopyLink = () => {
-  navigator.clipboard.writeText(window.location.href);
-  alert("Link copied!");
-};
+    try {
+      const state = useStore.getState();
+      const boardData = state.history;
+      const encoded = encodeURIComponent(JSON.stringify(boardData));
+      const shareUrl = `${window.location.origin}?data=${encoded}`;
+      navigator.clipboard.writeText(shareUrl);
+      alert("Board link copied!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to copy link");
+    }
+  };
 
-
-
-  const handleDownload = () => {
-  const canvas = document.querySelector("canvas");
-  if (!canvas) return;
-
-  const link = document.createElement("a");
-  link.download = "board.png";
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-};
+  const handleDownload = async () => {
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(document.body);
+      const link = document.createElement("a");
+      link.download = "board.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (err) {
+      console.error(err);
+      alert("Download failed");
+    }
+  };
 
   return (
     <header className="fixed top-4 left-4 right-4 h-14 z-[100] flex items-center justify-between pointer-events-none">
-      {/* 1. Board Info Section */}
       <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm border border-slate-200/50 flex items-center gap-3 pointer-events-auto">
         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">G</div>
         <div>
@@ -43,7 +53,6 @@ export default function TopToolbar() {
         </div>
       </div>
 
-      {/* 2. Center History & Reset Controls */}
       <div className="bg-white/90 backdrop-blur-md p-1 rounded-2xl shadow-sm border border-slate-200/50 flex gap-1 pointer-events-auto">
         <button onClick={undo} disabled={history.length === 0} className="px-3 py-1.5 text-xs font-bold hover:bg-slate-100 rounded-xl disabled:opacity-30">UNDO</button>
         <button onClick={redo} disabled={redoStack.length === 0} className="px-3 py-1.5 text-xs font-bold hover:bg-slate-100 rounded-xl disabled:opacity-30">REDO</button>
@@ -61,9 +70,7 @@ export default function TopToolbar() {
         </button>
       </div>
 
-      {/* 3. Integrated Avatars & Share Section */}
       <div className="flex items-center gap-3 pointer-events-auto relative">
-        {/* Avatars Clickable Area */}
         <div className="flex -space-x-2 cursor-pointer transition-transform hover:scale-105" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
           {others.slice(0, 3).map((user) => (
             <div 
@@ -79,7 +86,6 @@ export default function TopToolbar() {
               +{others.length - 3}
             </div>
           )}
-          {/* Me/Host Icon if no others are connected */}
           {others.length === 0 && (
             <div className="w-8 h-8 rounded-full border-2 border-white bg-blue-500 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
               ME
@@ -87,34 +93,31 @@ export default function TopToolbar() {
           )}
         </div>
 
-       <button
-  onClick={() => setIsShareOpen(!isShareOpen)}
-  className="bg-blue-600 text-white px-5 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
->
-  SHARE
-</button>
+        <button
+          onClick={() => setIsShareOpen(!isShareOpen)}
+          className="bg-blue-600 text-white px-5 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
+        >
+          SHARE
+        </button>
 
         {isShareOpen && (
-  <div className="absolute top-14 right-0 bg-white border rounded-xl shadow-lg w-40 p-2 z-[200]">
-    
-    <button
-      onClick={handleDownload}
-      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
-    >
-      📥 Download
-    </button>
+          <div className="absolute top-14 right-0 bg-white border rounded-xl shadow-lg w-40 p-2 z-[200]">
+            <button
+              onClick={handleDownload}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
+            >
+              📥 Download
+            </button>
 
-    <button
-      onClick={handleCopyLink}
-      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
-    >
-      📋 Copy Link
-    </button>
+            <button
+              onClick={handleCopyLink}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
+            >
+              📋 Copy Link
+            </button>
+          </div>
+        )}
 
-  </div>
-)}
-
-        {/* Dynamic Dropdown Menu */}
         {isDropdownOpen && (
           <div className="absolute top-14 right-0 w-56 bg-white border border-stone-200 shadow-2xl rounded-2xl py-3 z-[110] animate-in fade-in slide-in-from-top-2">
             <div className="px-4 pb-2 border-b border-stone-100 text-[9px] font-black text-stone-400 uppercase tracking-[0.15em]">
@@ -122,7 +125,6 @@ export default function TopToolbar() {
             </div>
             
             <div className="max-h-64 overflow-y-auto pt-2">
-              {/* Host / Local User */}
               <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-stone-50">
                 <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-[9px] font-black text-white shadow-inner">YOU</div>
                 <div className="flex flex-col">
@@ -131,7 +133,6 @@ export default function TopToolbar() {
                 </div>
               </div>
 
-              {/* Remote Users */}
               {others.map((user) => (
                 <div key={user.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-stone-50">
                   <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-white shadow-inner" style={{ backgroundColor: user.color }}>
