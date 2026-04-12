@@ -9,6 +9,11 @@ export default function TopToolbar() {
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const handleShare = () => {
+  navigator.clipboard.writeText(window.location.href);
+  alert("Link copied! Share with others 🚀");
+};
+
   return (
     <header className="fixed top-4 left-4 right-4 h-14 z-[100] flex items-center justify-between pointer-events-none">
       {/* 1. Board Info Section */}
@@ -64,8 +69,11 @@ export default function TopToolbar() {
           )}
         </div>
 
-        <button className="bg-blue-600 text-white px-5 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors">
-          SHARE
+        <button
+            onClick={handleShare}
+            className="bg-blue-600 text-white px-5 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
+            >
+            SHARE
         </button>
 
         {/* Dynamic Dropdown Menu */}
