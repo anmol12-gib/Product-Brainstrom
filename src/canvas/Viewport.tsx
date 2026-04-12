@@ -45,6 +45,7 @@ export default function Viewport() {
       }}
     >
       <div 
+        id="board-content"
         style={{ 
           transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
           transformOrigin: '0 0'

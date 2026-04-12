@@ -30,28 +30,74 @@ export default function TopToolbar() {
   };
 
   
-  const handleDownload = async () => {
+const handleDownload = async () => {
   try {
-    const html2canvas = (await import("html2canvas")).default;
-    
-    const element = document.getElementById("board-root");
+    const htmlToImage = await import("html-to-image");
 
-    if (!element) {
-      alert("Board not found");
-      return;
+    const root = document.getElementById("board-root");
+    const svg = root?.querySelector("svg");
+
+    if (!root) return;
+
+    const width = root.clientWidth;
+    const height = root.clientHeight;
+
+    // create final canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) return;
+
+    // background
+    ctx.fillStyle = "#E7E2D8";
+    ctx.fillRect(0, 0, width, height);
+
+    // 🔹 1. render SVG cleanly
+    if (svg) {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      await new Promise((res) => {
+        img.onload = res;
+        img.src = url;
+      });
+
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
     }
 
-    const canvas = await html2canvas(element as HTMLElement);
+    // 🔹 2. render HTML layer (no border)
+    const htmlLayer = root.querySelector("#board-content") as HTMLElement;
 
+    if (htmlLayer) {
+      const htmlDataUrl = await htmlToImage.toPng(htmlLayer, {
+        cacheBust: true,
+        backgroundColor: "transparent",
+      });
+
+      const img = new Image();
+      await new Promise((res) => {
+        img.onload = res;
+        img.src = htmlDataUrl;
+      });
+
+      ctx.drawImage(img, 0, 0);
+    }
+
+    // download
     const link = document.createElement("a");
-    link.download = "product-brainstorm.png";
+    link.download = "whiteboard.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
+
   } catch (err) {
     console.error(err);
     alert("Download failed");
   }
-
 };
   return (
     <header className="fixed top-4 left-4 right-4 h-14 z-[100] flex items-center justify-between pointer-events-none">

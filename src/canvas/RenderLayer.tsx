@@ -110,9 +110,9 @@ export default function RenderLayer() {
         >
           <div className="w-full h-full relative" style={{ pointerEvents: 'none' }}>
             {obj.type === 'shape' ? (
-              <div className="w-full h-full shadow-sm" style={{ backgroundColor: obj.color, clipPath: getClipPath(obj.shapeType) }} />
+              <div className="w-full h-full" style={{ backgroundColor: obj.color, clipPath: getClipPath(obj.shapeType) }} />
             ) : obj.type === 'sticky' ? (
-              <div className="w-full h-full flex flex-col rounded-xl shadow-md border border-stone-200/50 overflow-hidden" style={{ backgroundColor: obj.color }}>
+              <div className="w-full h-full flex flex-col rounded-xl border border-stone-200/50 overflow-hidden" style={{ backgroundColor: obj.color }}>
                 <input className="bg-black/5 px-3 py-3 border-b border-black/5 text-[10px] font-bold uppercase tracking-widest outline-none placeholder:text-black/30 pointer-events-auto" placeholder="ADD TITLE" defaultValue={obj.title} onPointerDown={(e) => e.stopPropagation()} onChange={(e) => updateObject(obj.id, { title: e.target.value })} />
                 <textarea className="w-full h-full p-4 bg-transparent outline-none resize-none pointer-events-auto placeholder:text-stone-400 font-medium" placeholder="Write a note..." defaultValue={obj.text} onPointerDown={(e) => e.stopPropagation()} onBlur={(e) => updateObject(obj.id, { text: e.target.value })} />
               </div>
