@@ -33,6 +33,7 @@ export default function Viewport() {
 
   return (
     <div 
+       id="board-root"
       className={`w-full h-full overflow-hidden relative touch-none ${
         activeTool === 'pan' ? 'cursor-grab active:cursor-grabbing' : ''
       }`}

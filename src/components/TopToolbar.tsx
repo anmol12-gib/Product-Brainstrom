@@ -29,20 +29,30 @@ export default function TopToolbar() {
     }
   };
 
+  
   const handleDownload = async () => {
-    try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(document.body);
-      const link = document.createElement("a");
-      link.download = "board.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    } catch (err) {
-      console.error(err);
-      alert("Download failed");
-    }
-  };
+  try {
+    const html2canvas = (await import("html2canvas")).default;
+    
+    const element = document.getElementById("board-root");
 
+    if (!element) {
+      alert("Board not found");
+      return;
+    }
+
+    const canvas = await html2canvas(element as HTMLElement);
+
+    const link = document.createElement("a");
+    link.download = "product-brainstorm.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  } catch (err) {
+    console.error(err);
+    alert("Download failed");
+  }
+
+};
   return (
     <header className="fixed top-4 left-4 right-4 h-14 z-[100] flex items-center justify-between pointer-events-none">
       <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm border border-slate-200/50 flex items-center gap-3 pointer-events-auto">
