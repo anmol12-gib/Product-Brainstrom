@@ -8,10 +8,28 @@ export default function TopToolbar() {
   } = useStore();
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const handleShare = () => {
   navigator.clipboard.writeText(window.location.href);
   alert("Link copied! Share with others 🚀");
+};
+
+  const handleCopyLink = () => {
+  navigator.clipboard.writeText(window.location.href);
+  alert("Link copied!");
+};
+
+
+
+  const handleDownload = () => {
+  const canvas = document.querySelector("canvas");
+  if (!canvas) return;
+
+  const link = document.createElement("a");
+  link.download = "board.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 };
 
   return (
@@ -69,12 +87,32 @@ export default function TopToolbar() {
           )}
         </div>
 
-        <button
-            onClick={handleShare}
-            className="bg-blue-600 text-white px-5 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
-            >
-            SHARE
-        </button>
+       <button
+  onClick={() => setIsShareOpen(!isShareOpen)}
+  className="bg-blue-600 text-white px-5 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
+>
+  SHARE
+</button>
+
+        {isShareOpen && (
+  <div className="absolute top-14 right-0 bg-white border rounded-xl shadow-lg w-40 p-2 z-[200]">
+    
+    <button
+      onClick={handleDownload}
+      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
+    >
+      📥 Download
+    </button>
+
+    <button
+      onClick={handleCopyLink}
+      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
+    >
+      📋 Copy Link
+    </button>
+
+  </div>
+)}
 
         {/* Dynamic Dropdown Menu */}
         {isDropdownOpen && (
