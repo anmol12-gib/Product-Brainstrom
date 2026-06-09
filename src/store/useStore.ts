@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5173";
 
 export type ShapeType = 'rect' | 'circle' | 'triangle' | 'square' | 'arrow' | 'hexagon' | 'pentagon' | 'star' | 'diamond' | 'parallelogram' | 'trapezium';
 
