@@ -44,11 +44,6 @@ io.on('connection', (socket) => {
         }
     });
 
-<<<<<<< HEAD
-    // 3. OBJECT ADDITION
-=======
-    // 3. OBJECT ADDITION 
->>>>>>> e149a24 (add html2canvas)
     socket.on('object-add', (newObj) => {
         console.log(`New ${newObj.type} added by ${socket.id}`);
         
@@ -74,12 +69,10 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
-<<<<<<< HEAD
-    console.log(`🚀 Collaborative Server running on port ${PORT}`);
+    console.log(` Collaborative Server running on port ${PORT}`);
 });
-=======
-    console.log(`Collaborative Server running on port ${PORT}`);
-});
->>>>>>> e149a24 (add html2canvas)
+
+    
+
