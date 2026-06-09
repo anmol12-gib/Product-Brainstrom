@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 443;
 server.listen(PORT, () => {
   console.log(`Collaborative Server running on port ${PORT}`);
 });
