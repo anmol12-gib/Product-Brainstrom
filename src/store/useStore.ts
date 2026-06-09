@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { io, Socket } from 'socket.io-client';
 
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
+
 export type ShapeType = 'rect' | 'circle' | 'triangle' | 'square' | 'arrow' | 'hexagon' | 'pentagon' | 'star' | 'diamond' | 'parallelogram' | 'trapezium';
 
 interface RemoteUser {
@@ -13,18 +15,18 @@ interface RemoteUser {
 export interface BoardObject {
   id: string;
   type: 'sticky' | 'text' | 'path' | 'shape' | 'image';
-  x: number; 
+  x: number;
   y: number;
-  width: number; 
+  width: number;
   height: number;
   text?: string;
   title?: string;
   color: string;
-  rotation?: number; 
-  shapeType?: ShapeType; 
-  showHandles?: boolean; 
-  points?: { x: number; y: number }[]; 
-  imageUrl?: string; 
+  rotation?: number;
+  shapeType?: ShapeType;
+  showHandles?: boolean;
+  points?: { x: number; y: number }[];
+  imageUrl?: string;
 }
 
 interface WhiteboardState {
@@ -70,8 +72,7 @@ export const useStore = create<WhiteboardState>((set, get) => ({
   setSelectedColor: (color) => set({ selectedColor: color }),
   setSelectedShapeType: (type) => set({ selectedShapeType: type }),
   updateViewport: (delta) => set((s) => ({ viewport: { ...s.viewport, ...delta } })),
-  
-  // Create object and sync
+
   addObject: (obj, emit = true) => {
     set((s) => ({
       history: [...s.history, s.boardObjects],
@@ -81,7 +82,6 @@ export const useStore = create<WhiteboardState>((set, get) => ({
     if (emit) get().socket?.emit('object-add', obj);
   },
 
-  // Update object and sync
   updateObject: (id, updates, emit = true) => {
     set((s) => ({
       boardObjects: s.boardObjects.map(o => o.id === id ? { ...o, ...updates } : o)
@@ -89,14 +89,13 @@ export const useStore = create<WhiteboardState>((set, get) => ({
     if (emit) get().socket?.emit('object-update', { id, updates });
   },
 
-  // Delete object and sync
   deleteObject: (id, emit = true) => {
     set((s) => ({
       history: [...s.history, s.boardObjects],
       boardObjects: s.boardObjects.filter(o => o.id !== id),
       redoStack: []
     }));
-    if (emit && get().socket) get().socket.emit('object-delete', id);
+    if (emit) get().socket?.emit('object-delete', id);
   },
 
   undo: () => set((s) => {
@@ -110,13 +109,22 @@ export const useStore = create<WhiteboardState>((set, get) => ({
     return { history: [...s.history, s.boardObjects], boardObjects: s.redoStack[0], redoStack: s.redoStack.slice(1) };
   }),
 
-  resetBoard: () => set({ boardObjects: [], history: [], redoStack: [], viewport: { x: 0, y: 0, zoom: 1, currentX: 0, currentY: 0 } }),
+  resetBoard: () => set({
+    boardObjects: [],
+    history: [],
+    redoStack: [],
+    viewport: { x: 0, y: 0, zoom: 1, currentX: 0, currentY: 0 }
+  }),
 
   initCollaboration: () => {
     // SINGLETON: Prevent multiple connections
     if (get().socket?.connected) return;
+
     
-    const socket = io('http://localhost:4000');
+    const socket = io(SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
+    });
 
     socket.on('users-update', (users: RemoteUser[]) => {
       set({ others: users.filter(u => u.id !== socket.id) });
@@ -128,11 +136,10 @@ export const useStore = create<WhiteboardState>((set, get) => ({
       }));
     });
 
-    // Object Syncing Listeners
     socket.on('remote-object-add', (newObj: BoardObject) => {
       const alreadyExists = get().boardObjects.some(o => o.id === newObj.id);
       if (!alreadyExists) {
-        get().addObject(newObj, false); // emit false to prevent loops
+        get().addObject(newObj, false);
       }
     });
 
@@ -147,7 +154,6 @@ export const useStore = create<WhiteboardState>((set, get) => ({
     set({ socket });
   },
 
-  // Cleanup to stop ghost collaborators
   terminateCollaboration: () => {
     const socket = get().socket;
     if (socket) {
